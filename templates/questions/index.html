@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    {% for q in questions %}
+    <p>{{ q.user }}</p>
+    <a href="{{q.slug}}">
+        <p>{{ q.title }}</p>
+    </a>
+    {% for tag in q.tag.all %}
+    <a href="{{tag.slug}}">{{ tag.name }}</a>
+    {% endfor %}
+    <p>{{ q.created_at }}</p>
+    {% endfor %}
+
+
+</body>
+
+</html>
