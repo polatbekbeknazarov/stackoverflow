@@ -8,17 +8,25 @@
 </head>
 
 <body>
+    {% if request.user.is_authenticated %}
+    <a href="{% url 'add_question' %}">Создать</a>
+    {% else %}
+    <a href="#">Войти</a>
+    <a href="#">Регистрация</a>
+    {% endif %}
+
+
+
     {% for q in questions %}
     <p>{{ q.user }}</p>
-    <a href="{{q.slug}}">
+    <a href="{% url 'quest_detail' q.slug %}">
         <p>{{ q.title }}</p>
     </a>
     {% for tag in q.tag.all %}
-    <a href="{{tag.slug}}">{{ tag.name }}</a>
+    <a href="{% url 'tag_detail' tag.pk %}">{{ tag }}{% if not forloop.last %}, {% endif %}</a>
     {% endfor %}
     <p>{{ q.created_at }}</p>
     {% endfor %}
-
 
 </body>
 
