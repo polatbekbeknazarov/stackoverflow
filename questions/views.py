@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
-from questions.models import Question
-from questions.forms import AddQuestionFrom
+from questions.models import Question, Answer
+from questions.forms import AddQuestionFrom, AddAnswerForm
 
 def index(request):
     questions = Question.objects.all()
@@ -14,9 +14,15 @@ def index(request):
 
 def quest_detail(request, question_slug):
     question = get_object_or_404(Question, slug=question_slug)
+    answers = Answer.objects.all()
+
+    form = AddAnswerForm()
+    
 
     context = {
         'question': question,
+        'answers': answers,
+        'form': form,
     }
 
     return render(request, 'questions/question_detail.html', context)
@@ -51,3 +57,18 @@ def add_question(request):
     }
 
     return render(request, 'questions/add_question.html', context)
+
+
+def add_answer(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+
+    if request.method == 'POST':
+        form = AddAnswerForm(request.POST)
+
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.user = request.user
+            answer.question = question  
+            answer.save()
+
+    return redirect('quest_detail', question.slug)
